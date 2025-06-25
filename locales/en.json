@@ -1,0 +1,42 @@
+{
+    "currency": {
+        "symbol": " $ "
+    },
+    "error": {
+        "washing_machine_busy": "This washing machine is already in use.",
+        "invalid_amount": "Invalid amount. Please enter a valid number.",
+        "timer_finished": "Your money has been laundered you can now collect them.",
+        "not_started": "The washing machine hasn't been started yet.",
+        "too_late_to_cancel": "You cannot cancel the washing process now.",
+        "not_your_machine": "You can only collect money from your own washing machines.",
+        "already_using_machine": "You can only use one washing machine at a time.",
+        "not_enough_inventory_space": "You don't have enough space in your inventory to collect.",
+        "invalid_moneywash": "Door is locked."
+    },
+    "success": {
+        "money_washed": "Your money has been laundered.",
+        "washing_stopped": "Money wash has been stopped. You were refunded "
+    },
+    "info": {
+        "money_is_being_washed": "Your money is being washed.",
+        "entering_moneywash": "You have entered the money wash.",
+        "exiting_moneywash": "You have exited the money wash."
+    },
+    "moneywash": {
+        "target_enter": "Enter Money Wash",
+        "target_exit": "Exit Money Wash",
+        "textui_enter": "Press E to enter the Money Wash.",
+        "textui_exit": "Press E to exit the Money Wash."
+    },
+    "washing_machine": {
+        "target_open_washing_machine": "Open Washing Machine",
+        "textui_open_washing_machine": "Press E to open the washing machine.",
+        "title": "Washing Machine",
+        "subtitle_wash_money": "being washed",
+        "description_wash_money": "Money laundering in progress",
+        "collect_money": "Collect Washed Money",
+        "collect_money_description": "Collect your washed money",
+        "stop_washing": "Stop washing money",
+        "stop_washing_description": "Stop the money laundering process"
+    }
+}

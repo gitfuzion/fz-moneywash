@@ -5,6 +5,8 @@ author 'Fuzion'
 description 'A moneywash system for FiveM'
 version 'v1.0.0'
 
+ox_lib 'locale'
+
 shared_scripts {
     '@ox_lib/init.lua',
     '@qbx_core/modules/lib.lua',
@@ -17,6 +19,10 @@ client_scripts {
 
 server_scripts {
     'server/main.lua'
+}
+
+files {
+    'locales/*.json',
 }
 
 lua54 'yes'
