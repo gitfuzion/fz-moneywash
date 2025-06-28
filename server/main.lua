@@ -12,7 +12,7 @@ end)
 lib.callback.register('fz-moneywash:getMoneywashAmount', function(source, id)
     local player = exports.qbx_core:GetPlayer(source)
     if not player then return end
-    if not activeWashingMachines[id] or not activeWashingMachines[id].player == source then 
+    if not activeWashingMachines[id] or activeWashingMachines[id].player ~= source then 
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.not_your_machine'), 'error')
         return 0
     end
@@ -41,26 +41,28 @@ local function isUsingMachineAlready(source, currentId)
     return false
 end
 
-RegisterNetEvent('fz-moneywash:collectMoney', function(id, moneywashAmount)
+RegisterNetEvent('fz-moneywash:collectMoney', function(id)
     local player = exports.qbx_core:GetPlayer(source)
     if not player then return end
-    if not activeWashingMachines[id] or not activeWashingMachines[id].player == source then 
+    if not activeWashingMachines[id] or activeWashingMachines[id].player ~= source then 
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.not_your_machine'), 'error')
         return
     end
+    local moneywashAmount = activeWashingMachines[id].moneywashAmount
     local cleanmoney = math.floor(moneywashAmount * (1 - config.tax))
     player.Functions.AddMoney('cash', cleanmoney)
     TriggerClientEvent('fz-moneywash:notify', source, locale('success.money_washed', cleanmoney), 'success')
     activeWashingMachines[id] = nil
 end)
 
-RegisterNetEvent('fz-moneywash:stopWashing', function(id, moneywashAmount)
+RegisterNetEvent('fz-moneywash:stopWashing', function(id)
     local player = exports.qbx_core:GetPlayer(source)
     if not player then return end
-    if not activeWashingMachines[id] or not activeWashingMachines[id].player == source then 
+    if not activeWashingMachines[id] or activeWashingMachines[id].player ~= source then 
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.not_your_machine'), 'error')
         return
     end
+    local moneywashAmount = activeWashingMachines[id].moneywashAmount
     if moneywashAmount < 0 then
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.invalid_amount'), 'error')
         return
@@ -103,6 +105,11 @@ RegisterNetEvent('fz-moneywash:washMoney', function(id, moneywashAmount)
     local washingTime = moneywashAmount * 0.007 + 10
     if washingTime > maxwashtime then
         washingTime = maxwashtime
+    end
+    local playerdirtycash = exports.ox_inventory:GetItem(source, config.dirtycashItem, nil, true)
+    if playerdirtycash < moneywashAmount then
+        TriggerClientEvent('fz-moneywash:notify', source, locale('error.missing_items'), 'error')
+        return
     end
     activeWashingMachines[id] = {
         player = source,
