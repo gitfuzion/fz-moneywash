@@ -48,7 +48,7 @@ RegisterNetEvent('fz-moneywash:collectMoney', function(id, moneywashAmount)
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.not_your_machine'), 'error')
         return
     end
-    local cleanmoney = moneywashAmount * (1 - config.tax)
+    local cleanmoney = math.floor(moneywashAmount * (1 - config.tax))
     player.Functions.AddMoney('cash', cleanmoney)
     TriggerClientEvent('fz-moneywash:notify', source, locale('success.money_washed', cleanmoney), 'success')
     activeWashingMachines[id] = nil
@@ -65,7 +65,7 @@ RegisterNetEvent('fz-moneywash:stopWashing', function(id, moneywashAmount)
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.invalid_amount'), 'error')
         return
     end
-    local dirtycash = moneywashAmount * (1 - config.tax)
+    local dirtycash = math.floor(moneywashAmount * (1 - config.tax))
     if exports.ox_inventory:CanCarryItem(source, config.dirtycashItem, dirtycash) then
         exports.ox_inventory:AddItem(source, config.dirtycashItem, dirtycash)
     else
