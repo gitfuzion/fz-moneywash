@@ -1,7 +1,5 @@
 local config = Config or {}
 
-local moneywashAmount = 0
-
 RegisterNetEvent('fz-moneywash:notify', function(message, type)
     lib.notify({
         description = message,
@@ -27,7 +25,7 @@ RegisterNetEvent('fz-moneywash:openWashingMachine', function(id)
                 onSelect = function()
                     local timerLeft = lib.callback.await('fz-moneywash:checkTimer', false, id)
                     if timerLeft == false then
-                        TriggerServerEvent('fz-moneywash:collectMoney', id, moneywashAmount)
+                        TriggerServerEvent('fz-moneywash:collectMoney', id)
                     elseif timerLeft == true then 
                         lib.notify({
                             description = locale('washing_machine.not_started'),
@@ -65,7 +63,7 @@ RegisterNetEvent('fz-moneywash:openWashingMachine', function(id)
                             duration = 5000
                         })
                     elseif timerLeft >= 10 then
-                        TriggerServerEvent('fz-moneywash:stopWashing', id, moneywashAmount)
+                        TriggerServerEvent('fz-moneywash:stopWashing', id)
                     else
                         lib.notify({
                             description = locale('error.too_late_to_cancel'),
@@ -239,7 +237,11 @@ RegisterNetEvent('fz-moneywash:startWashingMachine', function(id)
         }
     })
     if not input then return end
-    moneywashAmount = tonumber(input[1])
+    local moneywashAmount = tonumber(input[1])
+    if not moneywashAmount or moneywashAmount <= 0 then
+        lib.notify({ description = locale('error.invalid_amount'), type = 'error' })
+        return
+    end
     TriggerServerEvent('fz-moneywash:washMoney', id, moneywashAmount)
 end)
 

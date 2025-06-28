@@ -3,7 +3,7 @@ game 'gta5'
 
 author 'Fuzion'
 description 'A moneywash system for FiveM'
-version 'v1.0.0'
+version 'v1.0.1'
 
 ox_lib 'locale'
 

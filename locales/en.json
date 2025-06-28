@@ -11,7 +11,8 @@
         "not_your_machine": "You can only collect money from your own washing machines.",
         "already_using_machine": "You can only use one washing machine at a time.",
         "not_enough_inventory_space": "You don't have enough space in your inventory to collect.",
-        "invalid_moneywash": "Door is locked."
+        "invalid_moneywash": "Door is locked.",
+        "missing_items": "You don't have the correct amount of dirty cash on you."
     },
     "success": {
         "money_washed": "Your money has been laundered.",
