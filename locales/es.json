@@ -1,0 +1,42 @@
+{
+    "currency": {
+        "symbol": " $ "
+    },
+    "error": {
+        "washing_machine_busy": "Esta lavadora está en uso.",
+        "invalid_amount": "Cantidad inválida. Por favor ingresa un número válido.",
+        "timer_finished": "Tu dinero ha sido lavado, ya puedes recogerlo.",
+        "not_started": "La lavadora aún no ha sido iniciada.",
+        "too_late_to_cancel": "Ya no puedes cancelar el proceso de lavado.",
+        "not_your_machine": "Solo puedes recoger dinero de tus propias lavadoras.",
+        "already_using_machine": "Solo puedes usar una lavadora a la vez.",
+        "not_enough_inventory_space": "No tienes suficiente espacio en tu inventario para recoger.",
+        "invalid_moneywash": "La puerta está cerrada con llave."
+    },
+    "success": {
+        "money_washed": "Tu dinero ha sido lavado.",
+        "washing_stopped": "El lavado de dinero se ha detenido. Se te ha reembolsado "
+    },
+    "info": {
+        "money_is_being_washed": "Tu dinero está siendo lavado.",
+        "entering_moneywash": "Has entrado al lavado de dinero.",
+        "exiting_moneywash": "Has salido del lavado de dinero."
+    },
+    "moneywash": {
+        "target_enter": "Entrar al Lavado de Dinero",
+        "target_exit": "Salir del Lavado de Dinero",
+        "textui_enter": "Presiona E para entrar al Lavado de Dinero.",
+        "textui_exit": "Presiona E para salir del Lavado de Dinero."
+    },
+    "washing_machine": {
+        "target_open_washing_machine": "Abrir Lavadora",
+        "textui_open_washing_machine": "Presiona E para abrir la lavadora.",
+        "title": "Lavadora",
+        "subtitle_wash_money": "lavando",
+        "description_wash_money": "Lavado de dinero en curso",
+        "collect_money": "Recoger Dinero Lavado",
+        "collect_money_description": "Recoge tu dinero lavado",
+        "stop_washing": "Detener lavado de dinero",
+        "stop_washing_description": "Detener el proceso de lavado de dinero"
+    }
+}
