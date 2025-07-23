@@ -1,11 +1,19 @@
 local config = Config or {}
 
 RegisterNetEvent('fz-moneywash:notify', function(message, type)
-    lib.notify({
-        description = message,
-        type = type,
-        duration = 5000
-    })
+    if Config.Notify == 'qb' then
+        QBCore.Functions.Notify(message, type, 5000)
+    elseif Config.Notify == 'esx' then
+        ESX.ShowNotification(message, type, 5000)
+    elseif Config.Notify == 'ox' then
+        lib.notify({
+            description = message,
+            type = type,
+            duration = 5000
+        })
+    else
+        print("Invalid notification in config.lua")
+    end
 end)
 
 RegisterNetEvent('fz-moneywash:openWashingMachine', function(id)
