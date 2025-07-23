@@ -15,8 +15,10 @@ CreateThread(function()
         end
     elseif config.Framework == 'qb' then
         Framework = 'qb'
+        QBCore = exports['qb-core']:GetCoreObject()
     elseif config.Framework == 'esx' then
         Framework = 'esx'
+        ESX = exports['es_extended']:getSharedObject()
     else 
         print("Invalid framework in config.lua")
     end
