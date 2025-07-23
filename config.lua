@@ -1,5 +1,6 @@
 Config = {}
 
+Config.Framework = "auto" -- "qb", "esx", "auto"
 Config.Notify = "ox" -- "qb", "esx", "ox"
 
 Config.debug = false -- Use debug for the box and poly zones.

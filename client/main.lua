@@ -1,11 +1,33 @@
 local config = Config or {}
 
+local Framework = nil
+
+CreateThread(function()
+    if config.Framework == 'auto' then
+        if GetResourceState('qb-core') == 'started' then
+            Framework = 'qb'
+            QBCore = exports['qb-core']:GetCoreObject()
+        elseif GetResourceState('es_extended') == 'started' then
+            Framework = 'esx'
+            ESX = exports['es_extended']:getSharedObject()
+        else
+            print('Missing a supported framework.')
+        end
+    elseif config.Framework == 'qb' then
+        Framework = 'qb'
+    elseif config.Framework == 'esx' then
+        Framework = 'esx'
+    else 
+        print("Invalid framework in config.lua")
+    end
+end)
+
 RegisterNetEvent('fz-moneywash:notify', function(message, type)
-    if Config.Notify == 'qb' then
+    if config.Notify == 'qb' then
         QBCore.Functions.Notify(message, type, 5000)
-    elseif Config.Notify == 'esx' then
+    elseif config.Notify == 'esx' then
         ESX.ShowNotification(message, type, 5000)
-    elseif Config.Notify == 'ox' then
+    elseif config.Notify == 'ox' then
         lib.notify({
             description = message,
             type = type,
@@ -35,20 +57,12 @@ RegisterNetEvent('fz-moneywash:openWashingMachine', function(id)
                     if timerLeft == false then
                         TriggerServerEvent('fz-moneywash:collectMoney', id)
                     elseif timerLeft == true then 
-                        lib.notify({
-                            description = locale('washing_machine.not_started'),
-                            type = 'error',
-                            duration = 5000
-                        })
+                        TriggerEvent('fz-moneywash:notify', locale('washing_machine.not_started'), 'error')
                     else
                         local time = tonumber(timerLeft)
                         local minutes = math.floor(time / 60)
                         local seconds = math.floor(time % 60)
-                        lib.notify({
-                            description = string.format("Time left: %02d:%02d", minutes, seconds),
-                            type = 'error',
-                            duration = 5000
-                        })
+                        TriggerEvent('fz-moneywash:notify', string.format("Time left: %02d:%02d", minutes, seconds), 'error')
                     end
                 end,
             },
@@ -59,25 +73,13 @@ RegisterNetEvent('fz-moneywash:openWashingMachine', function(id)
                 onSelect = function()
                     local timerLeft = lib.callback.await('fz-moneywash:checkTimer', false, id)
                     if timerLeft == false then
-                        lib.notify({
-                            description = locale('error.timer_finished'),
-                            type = 'error',
-                            duration = 5000
-                        })
+                        TriggerEvent('fz-moneywash:notify', locale('error.timer_finished'), 'error')
                     elseif timerLeft == true then
-                        lib.notify({
-                            description = locale('error.not_started'),
-                            type = 'error',
-                            duration = 5000
-                        })
+                        TriggerEvent('fz-moneywash:notify', locale('error.not_started'), 'error')
                     elseif timerLeft >= 10 then
                         TriggerServerEvent('fz-moneywash:stopWashing', id)
                     else
-                        lib.notify({
-                            description = locale('error.too_late_to_cancel'),
-                            type = 'error',
-                            duration = 5000
-                        })
+                        TriggerEvent('fz-moneywash:notify', locale('error.too_late_to_cancel'), 'error')
                     end
                 end,
             },
@@ -247,7 +249,7 @@ RegisterNetEvent('fz-moneywash:startWashingMachine', function(id)
     if not input then return end
     local moneywashAmount = tonumber(input[1])
     if not moneywashAmount or moneywashAmount <= 0 then
-        lib.notify({ description = locale('error.invalid_amount'), type = 'error' })
+        TriggerEvent('fz-moneywash:notify', locale('error.invalid_amount'), 'error')
         return
     end
     TriggerServerEvent('fz-moneywash:washMoney', id, moneywashAmount)
