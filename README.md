@@ -7,6 +7,7 @@ FzMoneywash is a FiveM script made to make players able to wash their dirty cash
 
 ## Features
 - Easy installation.
+- Multiframework Support for both QBCore and ESX (QBox will also work!)
 - Easily editable local files to change text.
 - Secure server sided events.
 - Supports ox_target and TextUI for interaction.
@@ -20,7 +21,7 @@ FzMoneywash is a FiveM script made to make players able to wash their dirty cash
 - Configurable tax on cleaning the money and stopping the machine.
 
 ## Dependencies
-- qbx_core
+- qb-core or es_extended
 - ox_inventory
 - ox_lib
 

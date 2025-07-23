@@ -1,5 +1,8 @@
 Config = {}
 
+Config.Framework = "auto" -- "qb", "esx", "auto"
+Config.Notify = "ox" -- "qb", "esx", "ox"
+
 Config.debug = false -- Use debug for the box and poly zones.
 Config.useTarget = true -- Use ox_target or  TextUi for interaction.
 Config.keybind = 38 -- Control index for the TextUI. Default is 'E' (38) Change locals file for UI text. https://docs.fivem.net/docs/game-references/controls/#controls

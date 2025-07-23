@@ -2,16 +2,49 @@ local config = Config or {}
 
 local activeWashingMachines = {}
 
+local Framework = nil
+
+CreateThread(function()
+    if config.Framework == 'auto' then
+        if GetResourceState('qb-core') == 'started' then
+            Framework = 'qb'
+            QBCore = exports['qb-core']:GetCoreObject()
+        elseif GetResourceState('es_extended') == 'started' then
+            Framework = 'esx'
+            ESX = exports['es_extended']:getSharedObject()
+        else
+            print('Missing a supported framework.')
+        end
+    elseif config.Framework == 'qb' then
+        Framework = 'qb'
+        QBCore = exports['qb-core']:GetCoreObject()
+    elseif config.Framework == 'esx' then
+        Framework = 'esx'
+        ESX = exports['es_extended']:getSharedObject()
+    else 
+        print("Invalid framework in config.lua")
+    end
+end)
+
+local function GetPlayer(source)
+    if Framework == 'qb' then
+        return QBCore.Functions.GetPlayer(source)
+    elseif Framework == 'esx' then
+        return ESX.GetPlayerFromId(source)
+    else
+        print("Invalid framework in config.lua")
+        return nil
+    end
+end
+
 lib.callback.register('fz-moneywash:getMoney', function(source)
-    local player = exports.qbx_core:GetPlayer(source)
-    if not player then return end
     local moneyAmount = exports.ox_inventory:GetItem(source, config.dirtycashItem, nil, true)
     return moneyAmount
 end)
 
 lib.callback.register('fz-moneywash:getMoneywashAmount', function(source, id)
-    local player = exports.qbx_core:GetPlayer(source)
-    if not player then return end
+    local player = GetPlayer(source)
+
     if not activeWashingMachines[id] or activeWashingMachines[id].player ~= source then 
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.not_your_machine'), 'error')
         return 0
@@ -20,8 +53,6 @@ lib.callback.register('fz-moneywash:getMoneywashAmount', function(source, id)
 end)
 
 lib.callback.register('fz-moneywash:checkTimer', function(source, id)
-    local player = exports.qbx_core:GetPlayer(source)
-    if not player then return end
     local activemachine = activeWashingMachines[id]
     if not activemachine or not activemachine.timer then
         return true
@@ -31,6 +62,33 @@ lib.callback.register('fz-moneywash:checkTimer', function(source, id)
     end
     return activeWashingMachines[id].timer - os.time()
 end)
+
+local function AddMoney(source, type, amount)
+    if not amount or amount <= 0 then
+        print("Invalid amount specified")
+        return
+    end
+
+    if not type or (type ~= 'cash' and type ~= 'bank') then
+        print("Invalid money type specified")
+        return
+    end
+
+    if Framework == 'qb' then
+        local Player = GetPlayer(source)
+        if not Player then return end
+
+        Player.Functions.AddMoney(type, amount)
+    elseif Framework == 'esx' then
+        local xPlayer = GetPlayer(source)
+        if not xPlayer then return end
+
+        xPlayer.addAccountMoney(type, amount)
+    else
+        print("Invalid framework in config.lua")
+        return
+    end
+end
 
 local function isUsingMachineAlready(source, currentId)
     for id, machine in pairs(activeWashingMachines) do
@@ -42,22 +100,22 @@ local function isUsingMachineAlready(source, currentId)
 end
 
 RegisterNetEvent('fz-moneywash:collectMoney', function(id)
-    local player = exports.qbx_core:GetPlayer(source)
-    if not player then return end
+    local player = GetPlayer(source)
+
     if not activeWashingMachines[id] or activeWashingMachines[id].player ~= source then 
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.not_your_machine'), 'error')
         return
     end
     local moneywashAmount = activeWashingMachines[id].moneywashAmount
     local cleanmoney = math.floor(moneywashAmount * (1 - config.tax))
-    player.Functions.AddMoney('cash', cleanmoney)
+    AddMoney(source, 'cash', cleanmoney)
     TriggerClientEvent('fz-moneywash:notify', source, locale('success.money_washed', cleanmoney), 'success')
     activeWashingMachines[id] = nil
 end)
 
 RegisterNetEvent('fz-moneywash:stopWashing', function(id)
-    local player = exports.qbx_core:GetPlayer(source)
-    if not player then return end
+    local player = GetPlayer(source)
+
     if not activeWashingMachines[id] or activeWashingMachines[id].player ~= source then 
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.not_your_machine'), 'error')
         return
@@ -79,8 +137,8 @@ RegisterNetEvent('fz-moneywash:stopWashing', function(id)
 end)
 
 RegisterNetEvent('fz-moneywash:checkWashingMachine', function(id)
-    local player = exports.qbx_core:GetPlayer(source)
-    if not player then return end
+    local player = GetPlayer(source)
+
     if isUsingMachineAlready(source, id) then
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.already_using_machine'), 'error')
         return
@@ -95,8 +153,8 @@ RegisterNetEvent('fz-moneywash:checkWashingMachine', function(id)
 end)
 
 RegisterNetEvent('fz-moneywash:washMoney', function(id, moneywashAmount)
-    local player = exports.qbx_core:GetPlayer(source)
-    if not player then return end
+    local player = GetPlayer(source)
+
     if moneywashAmount <= 0 then
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.invalid_amount'), 'error')
         return
