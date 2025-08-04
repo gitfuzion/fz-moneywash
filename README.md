@@ -1,7 +1,7 @@
 # fz-moneywash
 
-![](https://img.shields.io/badge/FzStudio-Discord?logo=discord&logoColor=%23FFFFFF&labelColor=%235865F2&color=%23333333&link=https%3A%2F%2Fdiscord.gg%2Fyk5ean6rte)
-![](https://img.shields.io/badge/FzStudio-youtube?logo=youtube&logoColor=%23FFFFFF&labelColor=%23FF0000&color=grey&link=https%3A%2F%2Fwww.youtube.com%2Fchannel%2FUCRvcGXhc7HCiz7_6VJGjgkA)
+[![Discord](https://img.shields.io/badge/Discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/yk5ean6rte)
+[![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/@official-fzstudio)
 
 FzMoneywash is a FiveM script made to make players able to wash their dirty cash into clean cash.
 
