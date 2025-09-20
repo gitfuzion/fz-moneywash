@@ -11,6 +11,7 @@ FzMoneywash is a FiveM script made to make players able to wash their dirty cash
 - Easily editable local files to change text.
 - Secure server sided events.
 - Supports ox_target and TextUI for interaction.
+- Set if the moneywash location requires a keycard.
 - Clean transitions for the teleports in and out of the moneywash locations.
 - Setup as many machines and locations as needed.
 - Slider to choose the amount of dirty cash to wash.
@@ -28,8 +29,15 @@ FzMoneywash is a FiveM script made to make players able to wash their dirty cash
 ## Installation
 1. Download the resource and place it in your `resources` directory.
 2. Add `ensure fz-moneywash` to your `server.cfg` file.
-3. Configure the resource to your liking.
-4. Done, Its that easy!
+3. Add the item into ox_inventory/data/items.lua
+```lua
+    ['moneywash_card'] = {
+        label = 'Moneywash Card',
+        weight = 50,
+    },
+```
+4. Configure the resource to your liking.
+5. Done, Its that easy!
 
 ## Support
 For any issues or suggestions join: [Discord](#fz-moneywash)
