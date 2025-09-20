@@ -7,6 +7,7 @@ Config.debug = false -- Use debug for the box and poly zones.
 Config.useTarget = true -- Use ox_target or  TextUi for interaction.
 Config.keybind = 38 -- Control index for the TextUI. Default is 'E' (38) Change locals file for UI text. https://docs.fivem.net/docs/game-references/controls/#controls
 
+Config.moneywashCard = 'moneywash_card' -- Moneywash keycard item name.
 Config.dirtycashItem = 'black_money' -- Dirty cash item name.
 Config.tax = 0.2 -- Tax on washing money also applies to stopping the wash, 0.2 by default being 20%.
 
@@ -14,6 +15,7 @@ Config.maxwashtime = 15 -- Maximum washing time in minutes.
 
 Config.moneywashes = {
     moneywash1 = {
+        requireCard = true, -- If true, player needs a moneywash keycard to enter the moneywash.
         entrance = vec4(636.46, 2786.18, 42.21, 2.56),
         exit = vec4(1138.09, -3199.13, -39.67, 185.48),
         washingmachines = {
