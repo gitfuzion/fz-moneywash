@@ -90,9 +90,16 @@ RegisterNetEvent('fz-moneywash:openWashingMachine', function(id)
     lib.showContext('washingmachine_' .. id)
 end)
 
-local function enterMoneywash(moneywash, coords)
+local function enterMoneywash(moneywash, coords, requireCard)
     local playerPed = PlayerPedId()
     if moneywash == "entrance" then 
+        if requireCard then
+            local checkCard = lib.callback.await('fz-moneywash:checkMoneywashCard', false)
+            if not checkCard then
+                TriggerEvent('fz-moneywash:notify', locale('error.no_moneywash_card'), 'error')
+                return
+            end
+        end
         TriggerEvent('fz-moneywash:notify', locale('info.entering_moneywash'), 'info')
     elseif moneywash == "exit" then
         TriggerEvent('fz-moneywash:notify', locale('info.exiting_moneywash'), 'info')
@@ -111,6 +118,7 @@ local function setupEnterAndExitMoneywash()
     for i, current in pairs (config.moneywashes) do
         local entranceCoords = current.entrance
         local exitCoords = current.exit
+        local requireCard = current.requireCard
         if config.useTarget then
             exports.ox_target:addBoxZone({
                 coords = entranceCoords.xyz,
@@ -123,7 +131,7 @@ local function setupEnterAndExitMoneywash()
                         label = locale('moneywash.target_enter'),
                         icon = 'fas fa-door-open',
                         onSelect = function()
-                            enterMoneywash("entrance", exitCoords)
+                            enterMoneywash("entrance", exitCoords, requireCard)
                         end,
                     },
                 },
@@ -139,7 +147,7 @@ local function setupEnterAndExitMoneywash()
                         label = locale('moneywash.target_exit'),
                         icon = 'fas fa-door-open',
                         onSelect = function()
-                            enterMoneywash("exit", entranceCoords)
+                            enterMoneywash("exit", entranceCoords, requireCard)
                         end,
                     },
                 },

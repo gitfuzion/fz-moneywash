@@ -37,6 +37,16 @@ local function GetPlayer(source)
     end
 end
 
+lib.callback.register('fz-moneywash:checkMoneywashCard', function(source)
+    if not config.moneywashCard then return true end
+    local cardAmount = exports.ox_inventory:GetItem(source, config.moneywashCard, nil, true)
+    if cardAmount and cardAmount > 0 then
+        return true
+    else
+        return false
+    end
+end)
+
 lib.callback.register('fz-moneywash:getMoney', function(source)
     local moneyAmount = exports.ox_inventory:GetItem(source, config.dirtycashItem, nil, true)
     return moneyAmount
