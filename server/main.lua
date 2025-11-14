@@ -118,7 +118,7 @@ RegisterNetEvent('fz-moneywash:collectMoney', function(id)
     end
     local moneywashAmount = activeWashingMachines[id].moneywashAmount
     local cleanmoney = math.floor(moneywashAmount * (1 - config.tax))
-    AddMoney(source, 'cash', cleanmoney)
+    AddMoney(source, config.MoneyType, cleanmoney)
     TriggerClientEvent('fz-moneywash:notify', source, locale('success.money_washed', cleanmoney), 'success')
     activeWashingMachines[id] = nil
 end)

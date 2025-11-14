@@ -2,6 +2,7 @@ Config = {}
 
 Config.Framework = "auto" -- "qb", "esx", "auto"
 Config.Notify = "ox" -- "qb", "esx", "ox"
+Config.MoneyType = "cash" -- "cash", "bank" (IF USING ESX USE "money" INSTEAD OF "cash")
 
 Config.debug = false -- Use debug for the box and poly zones.
 Config.useTarget = true -- Use ox_target or  TextUi for interaction.
