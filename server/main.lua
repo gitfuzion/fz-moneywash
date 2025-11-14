@@ -79,7 +79,7 @@ local function AddMoney(source, type, amount)
         return
     end
 
-    if not type or (type ~= 'cash' and type ~= 'bank') then
+    if not type or (type ~= 'cash' and type ~= 'bank' and type ~= 'money') then
         print("Invalid money type specified")
         return
     end
