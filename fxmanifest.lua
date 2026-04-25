@@ -3,9 +3,7 @@ game 'gta5'
 
 author 'Fuzion'
 description 'A moneywash system for FiveM'
-version 'v1.1.0'
-
-ox_lib 'locale'
+version 'v1.2.0'
 
 shared_scripts {
     '@ox_lib/init.lua',

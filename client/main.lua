@@ -1,6 +1,9 @@
 local config = Config or {}
 
 local Framework = nil
+local frameworkReady = false
+
+lib.locale()
 
 CreateThread(function()
     if config.Framework == 'auto' then
@@ -22,6 +25,7 @@ CreateThread(function()
     else 
         print("Invalid framework in config.lua")
     end
+    frameworkReady = true
 end)
 
 RegisterNetEvent('fz-moneywash:notify', function(message, type)
@@ -160,14 +164,14 @@ local function setupEnterAndExitMoneywash()
                 rotation = entranceCoords.w,
                 debug = config.debug,
                 onEnter = function()
-                    lib.showTextUI(locale('textui_enter'))
+                    lib.showTextUI(locale('moneywash.textui_enter'))
                 end,
                 onExit = function()
                     lib.hideTextUI()
                 end,
                 inside = function()
                     if IsControlJustPressed(0, config.keybind) then
-                        TriggerEvent('fz-moneywash:enterMoneyWash', i)
+                        enterMoneywash("entrance", exitCoords, requireCard)
                         lib.hideTextUI()
                     end
                 end,
@@ -179,14 +183,14 @@ local function setupEnterAndExitMoneywash()
                 rotation = exitCoords.w,
                 debug = config.debug,
                 onEnter = function()
-                    lib.showTextUI(locale('textui_exit'))
+                    lib.showTextUI(locale('moneywash.textui_exit'))
                 end,
                 onExit = function()
                     lib.hideTextUI()
                 end,
                 inside = function()
                     if IsControlJustPressed(0, config.keybind) then
-                        TriggerEvent('fz-moneywash:exitMoneyWash', i)
+                        enterMoneywash("exit", entranceCoords, requireCard)
                         lib.hideTextUI()
                     end
                 end,
@@ -197,9 +201,8 @@ end
         
 
 local function setupWashingMachines()
-    for i, current in pairs (config.moneywashes) do
-        for id in pairs (current.washingmachines) do
-            local washingmachine = current.washingmachines[id]
+    for i, current in pairs(config.moneywashes) do
+        for id, washingmachine in pairs(current.washingmachines) do
             local coords = washingmachine.coords
             if config.useTarget then
                 exports.ox_target:addBoxZone({
@@ -265,13 +268,16 @@ RegisterNetEvent('fz-moneywash:startWashingMachine', function(id)
     TriggerServerEvent('fz-moneywash:washMoney', id, moneywashAmount)
 end)
 
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+RegisterNetEvent('fz-moneywash:setup', function()
     setupEnterAndExitMoneywash()
     setupWashingMachines()
 end)
 
 AddEventHandler('onResourceStart', function(resource)
-    if resource ~= GetCurrentResourceName() then return end
-    setupEnterAndExitMoneywash()
-    setupWashingMachines()
+    if resource ~= cache.resource then return end
+    TriggerEvent('fz-moneywash:setup')
+end)
+
+AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
+    TriggerEvent('fz-moneywash:setup')
 end)

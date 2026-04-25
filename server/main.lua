@@ -1,11 +1,13 @@
-local config = Config or {}
+Config = Config or {}
 
 local activeWashingMachines = {}
 
 local Framework = nil
 
+lib.locale()
+
 CreateThread(function()
-    if config.Framework == 'auto' then
+    if Config.Framework == 'auto' then
         if GetResourceState('qb-core') == 'started' then
             Framework = 'qb'
             QBCore = exports['qb-core']:GetCoreObject()
@@ -15,10 +17,10 @@ CreateThread(function()
         else
             print('Missing a supported framework.')
         end
-    elseif config.Framework == 'qb' then
+    elseif Config.Framework == 'qb' then
         Framework = 'qb'
         QBCore = exports['qb-core']:GetCoreObject()
-    elseif config.Framework == 'esx' then
+    elseif Config.Framework == 'esx' then
         Framework = 'esx'
         ESX = exports['es_extended']:getSharedObject()
     else 
@@ -38,8 +40,8 @@ local function GetPlayer(source)
 end
 
 lib.callback.register('fz-moneywash:checkMoneywashCard', function(source)
-    if not config.moneywashCard then return true end
-    local cardAmount = exports.ox_inventory:GetItem(source, config.moneywashCard, nil, true)
+    if not Config.moneywashCard then return true end
+    local cardAmount = exports.ox_inventory:GetItem(source, Config.moneywashCard, nil, true)
     if cardAmount and cardAmount > 0 then
         return true
     else
@@ -48,7 +50,7 @@ lib.callback.register('fz-moneywash:checkMoneywashCard', function(source)
 end)
 
 lib.callback.register('fz-moneywash:getMoney', function(source)
-    local moneyAmount = exports.ox_inventory:GetItem(source, config.dirtycashItem, nil, true)
+    local moneyAmount = exports.ox_inventory:GetItem(source, Config.dirtycashItem, nil, true)
     return moneyAmount
 end)
 
@@ -117,8 +119,8 @@ RegisterNetEvent('fz-moneywash:collectMoney', function(id)
         return
     end
     local moneywashAmount = activeWashingMachines[id].moneywashAmount
-    local cleanmoney = math.floor(moneywashAmount * (1 - config.tax))
-    AddMoney(source, config.MoneyType, cleanmoney)
+    local cleanmoney = math.floor(moneywashAmount * (1 - Config.tax))
+    AddMoney(source, Config.MoneyType, cleanmoney)
     TriggerClientEvent('fz-moneywash:notify', source, locale('success.money_washed', cleanmoney), 'success')
     activeWashingMachines[id] = nil
 end)
@@ -135,9 +137,9 @@ RegisterNetEvent('fz-moneywash:stopWashing', function(id)
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.invalid_amount'), 'error')
         return
     end
-    local dirtycash = math.floor(moneywashAmount * (1 - config.tax))
-    if exports.ox_inventory:CanCarryItem(source, config.dirtycashItem, dirtycash) then
-        exports.ox_inventory:AddItem(source, config.dirtycashItem, dirtycash)
+    local dirtycash = math.floor(moneywashAmount * (1 - Config.tax))
+    if exports.ox_inventory:CanCarryItem(source, Config.dirtycashItem, dirtycash) then
+        exports.ox_inventory:AddItem(source, Config.dirtycashItem, dirtycash)
     else
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.not_enough_inventory_space'), 'error')
         return
@@ -169,12 +171,12 @@ RegisterNetEvent('fz-moneywash:washMoney', function(id, moneywashAmount)
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.invalid_amount'), 'error')
         return
     end
-    local maxwashtime = config.maxwashtime * 60
+    local maxwashtime = Config.maxwashtime * 60
     local washingTime = moneywashAmount * 0.007 + 10
     if washingTime > maxwashtime then
         washingTime = maxwashtime
     end
-    local playerdirtycash = exports.ox_inventory:GetItem(source, config.dirtycashItem, nil, true)
+    local playerdirtycash = exports.ox_inventory:GetItem(source, Config.dirtycashItem, nil, true)
     if playerdirtycash < moneywashAmount then
         TriggerClientEvent('fz-moneywash:notify', source, locale('error.missing_items'), 'error')
         return
@@ -184,6 +186,10 @@ RegisterNetEvent('fz-moneywash:washMoney', function(id, moneywashAmount)
         moneywashAmount = moneywashAmount,
         timer = os.time() + washingTime,
     }
-    exports.ox_inventory:RemoveItem(source, config.dirtycashItem, moneywashAmount, nil)
+    exports.ox_inventory:RemoveItem(source, Config.dirtycashItem, moneywashAmount, nil)
     TriggerClientEvent('fz-moneywash:notify', source, locale('info.money_is_being_washed'), 'info')
+end)
+
+AddEventHandler('esx:playerLoaded', function(playerId)
+    TriggerClientEvent('fz-moneywash:setup', playerId)
 end)
